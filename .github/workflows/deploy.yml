@@ -18,12 +18,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: Set up Python (for cfn-lint)
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          architecture: "x64"
-          
+      - name: Check Python version
+        run: python3 --version
+
       - name: Install cfn-lint
         run: pip install cfn-lint
 
