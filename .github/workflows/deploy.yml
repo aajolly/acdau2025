@@ -24,7 +24,7 @@ jobs:
         run: cfn-lint cfn.yaml
 
       - name: Validate CloudFormation template
-        run: aws cloudformation validate-template --template-body cfn.yaml
+        run: aws cloudformation validate-template --template-body file://cfn.yaml
 
       - name: Deploy Cloudformation
         run: |
