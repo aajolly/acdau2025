@@ -16,9 +16,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
-      - name: Check Python version
-        run: python3 --version
 
       - name: Install cfn-lint
         run: pip install cfn-lint
@@ -27,7 +24,7 @@ jobs:
         run: cfn-lint cfn.yaml
 
       - name: Validate CloudFormation template
-        run: aws cloudformation validate-template --template-body cfn.yaml
+        run: aws cloudformation validate-template --template-file cfn.yaml
 
       - name: Create Change Set
         run: |
@@ -36,7 +33,7 @@ jobs:
             --change-set-name $CHANGE_SET_NAME \
             --change-set-type CREATE \
             --region ap-southeast-2
-            --template-body cfn.yaml \
+            --template-file cfn.yaml \
             --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND
 
       - name: Wait for Change Set to be created
