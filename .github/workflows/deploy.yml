@@ -23,13 +23,8 @@ jobs:
       - name: Install cfn-lint
         run: pip install cfn-lint
 
-      - name: Debug template path
-        run: |
-          echo "Template file: $TEMPLATE_FILE"
-          ls -l $TEMPLATE_FILE
-
       - name: Lint CloudFormation template
-        run: cfn-lint $TEMPLATE_FILE
+        run: cfn-lint cfn.yaml
 
       - name: Validate CloudFormation template
         run: aws cloudformation validate-template --template-body file://$TEMPLATE_FILE
