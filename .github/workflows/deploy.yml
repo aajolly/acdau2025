@@ -33,4 +33,5 @@ jobs:
             --region ap-southeast-2 \
             --template-file cfn.yaml \
             --no-fail-on-empty-changeset \
+            --disable-rollback \
             --capabilities CAPABILITY_NAMED_IAM
