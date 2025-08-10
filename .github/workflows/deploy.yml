@@ -35,6 +35,8 @@ jobs:
           aws cloudformation create-change-set \
             --stack-name $STACK_NAME \
             --change-set-name $CHANGE_SET_NAME \
+            --change-set-type CREATE \
+            --region ap-southeast-2
             --template-body file://$TEMPLATE_FILE \
             --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND
 
