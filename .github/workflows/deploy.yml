@@ -11,7 +11,6 @@ jobs:
 
     env:
       STACK_NAME: acdau2025-stack
-      TEMPLATE_FILE: cfn.yaml
       CHANGE_SET_NAME: changeset-${{ github.run_id }}
 
     steps:
@@ -42,7 +41,7 @@ jobs:
             --change-set-name $CHANGE_SET_NAME \
             --change-set-type CREATE \
             --region ap-southeast-2
-            --template-body file://$TEMPLATE_FILE \
+            --template-body cfn.yaml \
             --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND
 
       - name: Wait for Change Set to be created
