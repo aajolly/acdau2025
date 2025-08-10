@@ -6,24 +6,48 @@ Parameters:
     Type: String
     Default: 10.0.0.0/16
 Resources:
-  VPC:
-    Type: AWS::EC2::VPC
+  # VPC:
+  #   Type: AWS::EC2::VPC
+  #   Properties:
+  #     CidrBlock: !Ref CidrBlock
+  #     EnableDnsSupport: true
+  #     EnableDnsHostnames: true
+  #     InstanceTenancy: default
+  #     Tags:
+  #     - Key: Name
+  #       Value: !Sub 'vpc-${CidrBlock}'
+  # InternetGateway:
+  #   Type: AWS::EC2::InternetGateway
+  #   Properties:
+  #     Tags:
+  #     - Key: Name
+  #       Value: !Sub IGW-${CidrBlock}
+  # VPCGatewayAttachment:
+  #   Type: AWS::EC2::VPCGatewayAttachment
+  #   Properties:
+  #     VpcId: !Ref VPC
+  #     InternetGatewayId: !Ref InternetGateway
+  # IAM Role with AdministratorAccess
+  AdminRole4EC2:
+    Type: AWS::IAM::Role
     Properties:
-      CidrBlock: !Ref CidrBlock
-      EnableDnsSupport: true
-      EnableDnsHostnames: true
-      InstanceTenancy: default
-      Tags:
-      - Key: Name
-        Value: !Sub 'vpc-${CidrBlock}'
-  InternetGateway:
-    Type: AWS::EC2::InternetGateway
+      Description: IAM Role for EC2 with Administrator Access
+      RoleName: 'acdau2025-demo-admin-role'
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns: 
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+  AdminInstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
     Properties:
-      Tags:
-      - Key: Name
-        Value: !Sub IGW-${CidrBlock}
-  VPCGatewayAttachment:
-    Type: AWS::EC2::VPCGatewayAttachment
-    Properties:
-      VpcId: !Ref VPC
-      InternetGatewayId: !Ref InternetGateway
+      Path: /
+      Roles:
+        - !Ref AdminRole4EC2
