@@ -1,11 +1,11 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: "Create VPC"
-Parameters:
-  CidrBlock:
-    Description: 'The CIDR block to use for VPC creation'
-    Type: String
-    Default: 10.0.0.0/16
-Resources:
+# Parameters:
+#   CidrBlock:
+#     Description: 'The CIDR block to use for VPC creation'
+#     Type: String
+#     Default: 10.0.0.0/16
+# Resources:
   # VPC:
   #   Type: AWS::EC2::VPC
   #   Properties:
@@ -28,6 +28,7 @@ Resources:
   #     VpcId: !Ref VPC
   #     InternetGatewayId: !Ref InternetGateway
   # IAM Role with AdministratorAccess
+Resources:
   AdminRole4EC2:
     Type: AWS::IAM::Role
     Properties:
