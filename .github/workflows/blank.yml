@@ -1,0 +1,52 @@
+name: acdau2025-demo
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: codebuild-acdau2025-${{ github.run_id }}-${{ github.run_attempt }}
+
+    env:
+      STACK_NAME: acdau2025-stack
+      TEMPLATE_FILE: cfn.yaml
+      CHANGE_SET_NAME: changeset-${{ github.run_id }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python (for cfn-lint)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          
+      - name: Install cfn-lint
+        run: pip install cfn-lint
+
+      - name: Lint CloudFormation template
+        run: cfn-lint $TEMPLATE_FILE
+
+      - name: Validate CloudFormation template
+        run: aws cloudformation validate-template --template-body file://$TEMPLATE_FILE
+
+      - name: Create Change Set
+        run: |
+          aws cloudformation create-change-set \
+            --stack-name $STACK_NAME \
+            --change-set-name $CHANGE_SET_NAME \
+            --template-body file://$TEMPLATE_FILE \
+            --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND
+
+      - name: Wait for Change Set to be created
+        run: aws cloudformation wait change-set-create-complete \
+              --stack-name $STACK_NAME \
+              --change-set-name $CHANGE_SET_NAME
+
+      - name: Deploy Change Set
+        run: |
+          aws cloudformation execute-change-set \
+            --stack-name $STACK_NAME \
+            --change-set-name $CHANGE_SET_NAME
