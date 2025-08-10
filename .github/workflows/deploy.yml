@@ -26,23 +26,11 @@ jobs:
       - name: Validate CloudFormation template
         run: aws cloudformation validate-template --template-file cfn.yaml
 
-      - name: Create Change Set
+      - name: Deploy Cloudformation
         run: |
-          aws cloudformation create-change-set \
+          aws cloudformation deploy \
             --stack-name $STACK_NAME \
-            --change-set-name $CHANGE_SET_NAME \
-            --change-set-type CREATE \
-            --region ap-southeast-2
+            --region ap-southeast-2 \
             --template-file cfn.yaml \
-            --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND
-
-      - name: Wait for Change Set to be created
-        run: aws cloudformation wait change-set-create-complete \
-              --stack-name $STACK_NAME \
-              --change-set-name $CHANGE_SET_NAME
-
-      - name: Deploy Change Set
-        run: |
-          aws cloudformation execute-change-set \
-            --stack-name $STACK_NAME \
-            --change-set-name $CHANGE_SET_NAME
+            --no-fail-on-empty-changeset \
+            --capabilities CAPABILITY_NAMED_IAM
