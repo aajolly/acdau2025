@@ -1,0 +1,32 @@
+# IAM Role
+
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Create VPC'
+Parameters:
+  CidrBlock:
+    Description: 'The CIDR block to use for VPC creation'
+    Type: String
+    Default: 10.0.0.0/16
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref CidrBlock
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      Tags:
+      - Key: Name
+        Value: !Sub 'vpc-${CidrBlock}'
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: !Sub IGW-${CidrBlock}
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
