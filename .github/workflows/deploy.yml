@@ -27,7 +27,7 @@ jobs:
         run: cfn-lint cfn.yaml
 
       - name: Validate CloudFormation template
-        run: aws cloudformation validate-template --template-body file://$TEMPLATE_FILE
+        run: aws cloudformation validate-template --template-body cfn.yaml
 
       - name: Create Change Set
         run: |
