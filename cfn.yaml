@@ -67,14 +67,14 @@ Resources:
 ########################################
 ## Use unsupported AWS Service ##
 ########################################
-  ConnectInstance:
-    Type: AWS::Connect::Instance
-    Properties:
-      Attributes: 
-        InboundCalls: Yes
-        OutboundCalls: Yes
-      IdentityManagementType: CONNECT_MANAGED
-      InstanceAlias: acdau2025-connect
+  # ConnectInstance:
+  #   Type: AWS::Connect::Instance
+  #   Properties:
+  #     Attributes: 
+  #       InboundCalls: Yes
+  #       OutboundCalls: Yes
+  #     IdentityManagementType: CONNECT_MANAGED
+  #     InstanceAlias: acdau2025-connect
 
 ########################################
 ## Use supported AWS Service ##
