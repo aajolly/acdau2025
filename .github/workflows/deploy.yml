@@ -6,12 +6,12 @@ on:
     branches: [ "main" ]
 
 jobs:
-  deploy:
+  acdau2025DEMO:
     runs-on: codebuild-acdau2025-${{ github.run_id }}-${{ github.run_attempt }}
 
     env:
+      TEMPLATE_FILE: cfn.yaml
       STACK_NAME: acdau2025-stack
-      CHANGE_SET_NAME: changeset-${{ github.run_id }}
 
     steps:
       - name: Checkout repository
@@ -24,14 +24,14 @@ jobs:
         run: cfn-lint cfn.yaml
 
       - name: Validate CloudFormation template
-        run: aws cloudformation validate-template --template-body file://cfn.yaml
+        run: aws cloudformation validate-template --template-body file://$TEMPLATE_FILE
 
       - name: Deploy Cloudformation
         run: |
           aws cloudformation deploy \
             --stack-name $STACK_NAME \
             --region ap-southeast-2 \
-            --template-file cfn.yaml \
+            --template-file $TEMPLATE_FILE \
             --no-fail-on-empty-changeset \
             --disable-rollback \
             --capabilities CAPABILITY_NAMED_IAM
