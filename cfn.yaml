@@ -90,7 +90,16 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 10.1.1.0/24
-
+  EBSVolume:
+    Type: AWS::EC2::Volume
+    Properties:
+      AvailabilityZone: 'ap-southeast-2a'
+      Encrypted: yes
+      Size: 20
+      Tags: 
+        - Key: Name
+          Value: acdau2025-demo-ebs
+      VolumeType: gp3
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
@@ -99,10 +108,6 @@ Resources:
       SubnetId: 'subnet-0c8a5a52d169e55c6'
       SecurityGroupIds:
         - !GetAtt EC2SecurityGroup.GroupId
-      BlockDeviceMappings:
-        - DeviceName: /dev/sda1
-          Ebs:
-            VolumeSize: 20
       Tags:
         - Key: Name
           Value: acdau2025-demo-ec2
