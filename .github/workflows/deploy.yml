@@ -17,14 +17,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install cfn-lint
-        run: pip install cfn-lint
+      - name: Linting & Validating
+        run: |
+          pip install cfn-lint
+          cfn-lint cfn.yaml
+          aws cloudformation validate-template --template-body file://$TEMPLATE_FILE
 
-      - name: Lint CloudFormation template
-        run: cfn-lint cfn.yaml
+      # - name: Lint CloudFormation template
+      #   run: 
 
-      - name: Validate CloudFormation template
-        run: aws cloudformation validate-template --template-body file://$TEMPLATE_FILE
+      # - name: Validate CloudFormation template
+      #   run: 
 
       - name: Deploy Cloudformation
         run: |
