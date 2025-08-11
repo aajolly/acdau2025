@@ -4,6 +4,14 @@ Description: "Demo Stack for AWS Community Day, Australia 2025"
 ## Create a resource outside of scope ##
 ########################################
 Parameters:
+  InstanceType:
+    Description: The EC2 instance type.
+    Type: String
+    Default: t3.micro
+  LatestAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+    Description: Latest Amazon Linux 2 AMI ID from SSM Parameter Store.
   CidrBlock:
     Description: 'The CIDR block to use for VPC creation'
     Type: String
@@ -34,38 +42,67 @@ Resources:
 ## IAM Role with AdministratorAccess ##
 ########################################
 # Resources:
-#   AdminRole4EC2:
-#     Type: AWS::IAM::Role
-#     Properties:
-#       Description: IAM Role for EC2 with Administrator Access
-#       RoleName: 'acdau2025-demo-admin-role'
-#       Path: /
-#       AssumeRolePolicyDocument:
-#         Version: "2012-10-17"
-#         Statement:
-#           - Effect: Allow
-#             Principal:
-#               Service:
-#                 - ec2.amazonaws.com
-#             Action:
-#               - 'sts:AssumeRole'
-#       ManagedPolicyArns: 
-#         - 'arn:aws:iam::aws:policy/AdministratorAccess'
-#   AdminInstanceProfile:
-#     Type: 'AWS::IAM::InstanceProfile'
-#     Properties:
-#       Path: /
-#       Roles:
-#         - !Ref AdminRole4EC2
+  AdminRole4EC2:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: IAM Role for EC2 with Administrator Access
+      RoleName: 'acdau2025-demo-admin-role'
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      ManagedPolicyArns: 
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+  AdminInstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - !Ref AdminRole4EC2
 ########################################
 ## Use unsupported AWS Service ##
 ########################################
 # Resources:
-#   ConnectInstance:
-#     Type: AWS::Connect::Instance
-#     Properties:
-#       Attributes: 
-#         InboundCalls: Yes
-#         OutboundCalls: Yes
-#       IdentityManagementType: CONNECT_MANAGED
-#       InstanceAlias: acdau2025-connect
+  ConnectInstance:
+    Type: AWS::Connect::Instance
+    Properties:
+      Attributes: 
+        InboundCalls: Yes
+        OutboundCalls: Yes
+      IdentityManagementType: CONNECT_MANAGED
+      InstanceAlias: acdau2025-connect
+
+########################################
+## Use supported AWS Service ##
+########################################
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 10.1.1.0/24
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestAmiId
+      InstanceType: !Ref InstanceType
+      SubnetId: 'subnet-0c8a5a52d169e55c6'
+      SecurityGroupIds:
+        - !GetAtt EC2SecurityGroup.GroupId
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 20
+      Tags:
+        - Key: Name
+          Value: acdau2025-demo-ec2
