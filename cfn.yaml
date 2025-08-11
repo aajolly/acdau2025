@@ -90,6 +90,9 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 10.1.1.0/24
+      Tags:
+        - Key: Name
+          Value: acdau2025-demo-ec2-secgrp
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
