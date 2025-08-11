@@ -41,7 +41,6 @@ Resources:
 ########################################
 ## IAM Role with AdministratorAccess ##
 ########################################
-# Resources:
   AdminRole4EC2:
     Type: AWS::IAM::Role
     Properties:
@@ -68,7 +67,6 @@ Resources:
 ########################################
 ## Use unsupported AWS Service ##
 ########################################
-# Resources:
   ConnectInstance:
     Type: AWS::Connect::Instance
     Properties:
