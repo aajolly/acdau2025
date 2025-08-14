@@ -38,6 +38,7 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
+
 ########################################
 ## IAM Role with AdministratorAccess ##
 ########################################
@@ -64,6 +65,7 @@ Resources:
       Path: /
       Roles:
         - !Ref AdminRole4EC2
+
 ########################################
 ## Use unsupported AWS Service ##
 ########################################

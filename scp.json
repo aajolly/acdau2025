@@ -1,0 +1,55 @@
+{
+	"Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowOnlyApprovedServices",
+      "Effect": "Deny",
+      "NotAction": [
+        "acm:*",
+        "aws-marketplace-management:*",
+        "aws-marketplace:*",
+        "aws-portal:*",
+        "budgets:*",
+        "ce:*",
+        "codebuild:*",
+        "codeconnections:*",
+        "cloudwatch:*",
+        "cloudformation:*",
+        "cloudtrail:*",
+        "logs:*",
+        "ec2:*",
+        "iam:*",
+        "kms:*",
+        "networkmanager:*",
+        "organizations:*",
+        "pricing:*",
+        "route53:*",
+        "shield:*",
+        "sts:*",
+        "ssm:*",
+        "support:*",
+        "trustedadvisor:*",
+        "waf-regional:*",
+        "waf:*",
+        "wafv2:*",
+        "wellarchitected:*"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": [
+            "ap-southeast-2",
+            "us-east-1"
+          ]
+        },
+        "ArnNotLike": {
+          "aws:PrincipalARN": [
+            "arn:aws:iam::*:role/AWSControlTowerExecution*",
+            "arn:aws:iam::*:role/cdk-accel-cfn-exec-role*",
+            "arn:aws:iam::*:role/aws-reserved/sso.amazonaws.com/*/AWSReservedSSO_PlatformAdmin*"
+          ]
+        }
+      }
+    }
+  ]
+}

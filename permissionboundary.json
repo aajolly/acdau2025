@@ -1,0 +1,165 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowALL",
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*"
+        },
+        {
+            "Sid": "DenyPBIAMPolicyAlteration",
+            "Effect": "Deny",
+            "Action": [
+                "iam:DeletePolicy",
+                "iam:DeletePolicyVersion",
+                "iam:CreatePolicyVersion",
+                "iam:SetDefaultPolicyVersion"
+            ],
+            "Resource": [
+                "arn:aws:iam::AWS_ACCOUNT_ID:policy/acdau2025-permissionboundary"
+            ]
+        },
+        {
+            "Sid": "DenyRemovalOfPBFromAnyRole",
+            "Effect": "Deny",
+            "Action": [
+                "iam:DeleteRolePermissionsBoundary"
+            ],
+            "Resource": [
+                "arn:aws:iam::AWS_ACCOUNT_ID:role/*"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "iam:PermissionsBoundary": "arn:aws:iam::AWS_ACCOUNT_ID:policy/acdau2025-permissionboundary"
+                }
+            }
+        },
+        {
+            "Sid": "DenyAccessIfRequiredPBIsNotBeingApplied",
+            "Effect": "Deny",
+            "Action": [
+                "iam:PutRolePermissionsBoundary",
+                "iam:CreateRole"
+            ],
+            "Resource": [
+                "arn:aws:iam::AWS_ACCOUNT_ID:role/*"
+            ],
+            "Condition": {
+                "StringNotEquals": {
+                    "iam:PermissionsBoundary": "arn:aws:iam::AWS_ACCOUNT_ID:policy/acdau2025-permissionboundary"
+                }
+            }
+        },
+        {
+            "Sid": "ProtectIAM",
+            "Effect": "Deny",
+            "Action": [
+                "iam:CreateOpenIDConnectProvider",
+                "iam:DeleteAccountPasswordPolicy",
+                "iam:DeleteVirtualMFADevice",
+                "iam:AddUserToGroup",
+                "iam:AttachGroupPolicy",
+                "iam:CreateGroup",
+                "iam:CreateUser",
+                "iam:CreateSAMLProvider"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ProtectPlatformRoles",
+            "Effect": "Deny",
+            "Action": [
+                "iam:UpdateAssumeRolePolicy",
+                "iam:DeleteRole",
+                "iam:PutRolePolicy",
+                "iam:AttachRolePolicy"
+            ],
+            "Resource": [
+                "arn:aws:iam::AWS_ACCOUNT_ID:role/deploy*"
+            ]
+        },
+        {
+            "Sid": "DenyVpcEndpointCreationForAwsServices",
+            "Effect": "Deny",
+            "Action": "ec2:CreateVpcEndpoint",
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {
+                    "ec2:VpceServiceName": "com.amazonaws.vpce.ap-southeast-2.vpce-svc-*"
+                }
+            }
+        },
+        {
+            "Sid": "ProtectPlatformSharedServices",
+            "Effect": "Deny",
+            "Action": [
+                "ec2:Purchase*",
+								"savingsplans:CreateSavingsPlan",
+                "ec2:*VpcPeering*",
+                "ec2:CreateVerifiedAccessEndpoint*",
+								"ec2:CreateTransitGateway*",
+                "ec2:CreateVpc",
+                "ds:CreateDirectory",
+                "ds:CreateMicrosoftAD",
+                "ds:DeleteDirectory",
+								"ds:UnshareDirectory",
+								"ds:UpdateConditionalForwarder",
+								"ds:UpdateDirectory*",
+								"ds:UpdateSettings",
+								"ds-data:AddGroupMember",
+								"ds-data:CreateGroup",
+								"ds-data:CreateUser",
+								"ds-data:DeleteUser",
+								"ds-data:DeleteGroup",
+								"ds-data:RemoveGroupMember",
+								"ds-data:UpdateUser",
+								"ds-data:UpdateGroup",
+								"route53:CreateHostedZone",
+                "route53resolver:CreateFirewall*",
+                "route53resolver:CreateOutpostResolver",
+                "route53resolver:CreateResolver*",
+                "route53resolver:DeleteResolverRule",
+								"guardduty:AcceptInvitation",
+								"guardduty:ArchiveFindings",
+								"guardduty:CreateDetector",
+								"guardduty:CreateFilter",
+								"guardduty:CreateIPSet",
+								"guardduty:CreateMembers",
+								"guardduty:CreatePublishingDestination",
+								"guardduty:CreateSampleFindings",
+								"guardduty:CreateThreatIntelSet",
+								"guardduty:DeclineInvitations",
+								"guardduty:DeleteDetector",
+								"guardduty:DeleteFilter",
+								"guardduty:DeleteInvitations",
+								"guardduty:DeleteIPSet",
+								"guardduty:DeleteMembers",
+								"guardduty:DeletePublishingDestination",
+								"guardduty:DeleteThreatIntelSet",
+								"guardduty:Disassociate*",
+								"guardduty:InviteMembers",
+								"guardduty:StartMonitoringMembers",
+								"guardduty:StopMonitoringMembers",
+								"guardduty:TagResource",
+								"guardduty:UnarchiveFindings",
+								"guardduty:UntagResource",
+								"guardduty:UpdateDetector",
+								"guardduty:UpdateFilter",
+								"guardduty:UpdateFindingsFeedback",
+								"guardduty:UpdateIPSet",
+								"guardduty:UpdatePublishingDestination",
+								"guardduty:UpdateThreatIntelSet",
+								"config:DeleteConfigRule",
+								"config:DeleteConfigurationRecorder",
+								"config:DeleteDeliveryChannel",
+								"config:StopConfigurationRecorder",
+								"securityhub:DeleteInvitations",
+								"securityhub:DisableSecurityHub",
+								"securityhub:Disassociate*",
+								"securityhub:DeleteMembers"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
