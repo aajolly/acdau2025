@@ -45,7 +45,6 @@
         "ArnNotLike": {
           "aws:PrincipalARN": [
             "arn:aws:iam::*:role/AWSControlTowerExecution*",
-            "arn:aws:iam::*:role/cdk-accel-cfn-exec-role*",
             "arn:aws:iam::*:role/aws-reserved/sso.amazonaws.com/*/AWSReservedSSO_PlatformAdmin*"
           ]
         }
